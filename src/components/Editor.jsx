@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, styled } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
@@ -29,9 +30,15 @@ const Header = styled(Box)`
   font-weight: 700;
 `;
 
-const Editor = ({ heading, icon, color }) => {
+const Editor = ({ heading, icon, color, value, onChange }) => {
+  const [open, setOpen] = useState(true);
+
+  const handleChange = (editor, data, value) => {
+    onChange(value);
+  };
+
   return (
-    <Container>
+    <Container style={open ? null : { flexGrow: 0 }}>
       <Header>
         <Heading>
           <Box
@@ -52,10 +59,17 @@ const Editor = ({ heading, icon, color }) => {
           </Box>
           {heading}
         </Heading>
-        <FontAwesomeIcon icon={faWandMagicSparkles} />
+        <FontAwesomeIcon
+          fontSize="small"
+          style={{ alignSelf: "center" }}
+          icon={faWandMagicSparkles}
+          onClick={() => setOpen((prevState) => !prevState)}
+        />
       </Header>
       <ControlledEditor
         className="controlled-editor"
+        value={value}
+        onBeforeChange={handleChange}
         options={{
           theme: "material",
           lineNumbers: true,
